@@ -47,6 +47,55 @@
 
 #include <osgDB/FileUtils>
 
+vector< osg::ref_ptr<osg::MatrixTransform> > * vectorTransform;
+OsgNav* application;
+osg::ref_ptr<osg::MatrixTransform> arTransform;
+
+void updateScene( vector< osg::ref_ptr<osg::MatrixTransform> > * vectorTransform, OsgNav* application, osg::ref_ptr<osg::MatrixTransform> arTransform );
+class MyKeyboardEventHandler : public osgGA::GUIEventHandler {
+ 
+public:
+    MyKeyboardEventHandler() : osgGA::GUIEventHandler() { }      
+ 
+ 
+    /**
+        OVERRIDE THE HANDLE METHOD:
+        The handle() method should return true if the event has been dealt with
+        and we do not wish it to be handled by any other handler we may also have
+        defined. Whether you return true or false depends on the behaviour you 
+        want - here we have no other handlers defined so return true.
+    **/
+    virtual bool handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter& aa, 
+                        osg::Object* obj, osg::NodeVisitor* nv) { 
+ 
+        switch (ea.getEventType()) {
+ 
+ 
+            /** KEY EVENTS:
+                Key events have an associated key and event names.
+                In this example, we are interested in keys up/down/right/left arrow
+                and space bar.
+                If we detect a press then we modify the transformation matrix 
+                of the local transform node. **/
+            case osgGA::GUIEventAdapter::KEYDOWN: {
+ 
+                switch (ea.getKey()) {
+ 
+                    case osgGA::GUIEventAdapter::KEY_Up: 
+                        updateScene(vectorTransform,application,arTransform);
+						return true;
+ 
+                }
+ 
+                   default: return false;
+            }
+ 
+ 
+        }
+    }
+};
+
+
 osg::Group* createImageBackground(osg::Image* video) {
 	osgART::VideoLayer* _layer = new osgART::VideoLayer();
 	_layer->setSize(*video);
@@ -72,10 +121,55 @@ void freeMemory(OsgNav* application) {
 	delete application;
 }
 
+void updateScene( vector< osg::ref_ptr<osg::MatrixTransform> > * vectorTransform, OsgNav* application, osg::ref_ptr<osg::MatrixTransform> arTransform ) 
+{
+	
+	
+	for (int i = 1 ;i < vectorTransform->size()-1; i++)
+	{
+		
+		//	osg::ref_ptr<osg::MatrixTransform> flowVector = (*vectorTransform)[i];
+		double** points = application->points;
+		vector<int> flag_current = application->flag_current;
+		(*vectorTransform)[i]->setMatrix(osg::Matrix::translate(points[flag_current[i]][0],points[flag_current[i]][1],points[flag_current[i]][2]));
+
+		osg::Quat *quat = new osg::Quat();
+		osg::Vec3f *newVec=new osg::Vec3f(1.0,0.0,0.0);
+		if(application->flag_next[i]!=application->start[i])
+		{	
+
+			newVec->set(application->points[application->flag_next[i]][0]-application->points[application->flag_current[i]][0],application->points[application->flag_next[i]][1]-application->points[application->flag_current[i]][1],application->points[application->flag_next[i]][2]-application->points[application->flag_current[i]][2]);
+			newVec->normalize();
+			quat->makeRotate(osg::Vec3f(1.0,0.0,0.0),*newVec);
+			//double tmp = 0;
+			//quat->getRotate(tmp,*axisVec);
+			(*vectorTransform)[i]->preMult(osg::Matrix::rotate(*quat));
+			//vectorTransform[i]->preMult(osg::Matrix::rotate(tmp,axisVec->x(),axisVec->y(),axisVec->z()));
+		}
+		else
+		{
+			newVec->set(application->points[application->flag_current[i]][0]-application->points[application->flag_previous[i]][0],application->points[application->flag_current[i]][1]-application->points[application->flag_previous[i]][1],application->points[application->flag_current[i]][2]-application->points[application->flag_previous[i]][2]);
+			newVec->normalize();
+			quat->makeRotate(osg::Vec3f(1.0,0.0,0.0),*newVec);
+			//double tmp = 0;
+			//quat->getRotate(tmp,*axisVec);
+			(*vectorTransform)[i]->preMult(osg::Matrix::rotate(*quat));
+			//vectorTransform[i]->preMult(osg::Matrix::rotate(tmp,axisVec->x(),axisVec->y(),axisVec->z()));
+		}
+		application->updataFlags();
+
+		//(*vectorTransform)[i]->preMult(osg::Matrix::scale(5, 5, 5));
+		arTransform->addChild((*vectorTransform)[i].get());
+		//cam->addChild((*vectorTransform)[i].get());
+	}
+}
+
+
+
 int main(int argc, char* argv[])  {
 
 	vrj::Kernel* kernel = vrj::Kernel::instance();  // Get the kernel
-	OsgNav* application = new OsgNav(kernel, argc, argv);             // Instantiate an instance of the app
+	application = new OsgNav(kernel, argc, argv);             // Instantiate an instance of the app
 	if ( argc <= 4 )
 	{
 		// display some usage info (holding the user by the hand stuff)
@@ -132,7 +226,7 @@ int main(int argc, char* argv[])  {
 	viewer.addEventHandler(new osgViewer::WindowSizeHandler);
 	viewer.addEventHandler(new osgViewer::ThreadingHandler);
 	viewer.addEventHandler(new osgViewer::HelpHandler);
-
+	viewer.addEventHandler(new MyKeyboardEventHandler()); // Our handler
 
 	// preload the video and tracker
 	int _video_id = osgART::PluginManager::instance()->load("osgart_video_artoolkit2");
@@ -193,59 +287,38 @@ int main(int argc, char* argv[])  {
 	}
 
 	marker->setActive(true);
-
-	osg::ref_ptr<osg::MatrixTransform> arTransform = new osg::MatrixTransform();
-
+	
+	osg::ref_ptr<osg::Node> nodeT = osgDB::readNodeFile("./ives/11_17_90/n_001.ive");
+	osg::ref_ptr<osg::MatrixTransform> modelTransform = new osg::MatrixTransform();
+	modelTransform->addChild(application->mSwitch.get());
+	modelTransform->preMult(osg::Matrix::rotate(gmtl::Math::deg2Rad(-90.0f),1.0f, 0.0f, 0.0f));
+	modelTransform->preMult(osg::Matrix::scale(osg::Vec3f(application->myScale, application->myScale, application->myScale)));
+	arTransform = new osg::MatrixTransform();
+	//arTransform->addChild(osgART::testCube());
+		
+	arTransform->addChild(modelTransform);
+	
+	//arTransform->preMult(osg::Matrix::scale(50.0f, 50.0f, 50.0f));
+	arTransform->getOrCreateStateSet()->setRenderBinDetails(100, "RenderBin");
 	osgART::attachDefaultEventCallbacks(arTransform.get(),marker.get());
 
-	osg::ref_ptr<osg::Node> nodeT = osgDB::readNodeFile("./ives/11_17_90/n_022.ive");
+	
 
-	//arTransform->addChild(osgART::testCube());
-	arTransform->addChild(nodeT);
-	arTransform->getOrCreateStateSet()->setRenderBinDetails(100, "RenderBin");
 
 	osg::ref_ptr<osg::Group> videoBackground = createImageBackground(video.get());
 	videoBackground->getOrCreateStateSet()->setRenderBinDetails(0, "RenderBin");
 
 	osg::ref_ptr<osg::Camera> cam = calibration->createCamera();
 	
-	vector< osg::ref_ptr<osg::MatrixTransform> > *vectorTransform;
-	vectorTransform = &application->vectorTransform;
-	for (int i = 0 ;i < vectorTransform->size(); i++)
-	{
-		std::cout << "i is " << i <<"\n";
-	//	osg::ref_ptr<osg::MatrixTransform> flowVector = (*vectorTransform)[i];
-		double** points = application->points;
-		vector<int> flag_current = application->flag_current;
-		(*vectorTransform)[i]->setMatrix(osg::Matrix::translate(points[flag_current[i]][0],points[flag_current[i]][1],points[flag_current[i]][2]));
-		
-		osg::Quat *quat = new osg::Quat();
-		osg::Vec3f *newVec=new osg::Vec3f(1.0,0.0,0.0);
-		if(application->flag_next[i]!=application->start[i])
-		{	
 
-			newVec->set(application->points[application->flag_next[i]][0]-application->points[application->flag_current[i]][0],application->points[application->flag_next[i]][1]-application->points[application->flag_current[i]][1],application->points[application->flag_next[i]][2]-application->points[application->flag_current[i]][2]);
-			newVec->normalize();
-			quat->makeRotate(osg::Vec3f(1.0,0.0,0.0),*newVec);
-			//double tmp = 0;
-			//quat->getRotate(tmp,*axisVec);
-			(*vectorTransform)[i]->preMult(osg::Matrix::rotate(*quat));
-			//vectorTransform[i]->preMult(osg::Matrix::rotate(tmp,axisVec->x(),axisVec->y(),axisVec->z()));
-		}
-		else
-		{
-			newVec->set(application->points[application->flag_current[i]][0]-application->points[application->flag_previous[i]][0],application->points[application->flag_current[i]][1]-application->points[application->flag_previous[i]][1],application->points[application->flag_current[i]][2]-application->points[application->flag_previous[i]][2]);
-			newVec->normalize();
-			quat->makeRotate(osg::Vec3f(1.0,0.0,0.0),*newVec);
-			//double tmp = 0;
-			//quat->getRotate(tmp,*axisVec);
-			(*vectorTransform)[i]->preMult(osg::Matrix::rotate(*quat));
-			//vectorTransform[i]->preMult(osg::Matrix::rotate(tmp,axisVec->x(),axisVec->y(),axisVec->z()));
-		}
-		application->updataFlags();
-		
-		arTransform->addChild((*vectorTransform)[i].get());
-	}
+	
+
+	
+	vectorTransform = &application->vectorTransform;
+	//udpate scene per frame
+	updateScene(vectorTransform, application, arTransform);
+
+
 	
 	
 
@@ -262,3 +335,4 @@ int main(int argc, char* argv[])  {
 	return 0;
 	
 }
+

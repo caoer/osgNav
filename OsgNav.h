@@ -286,7 +286,7 @@ public:
 
 
 
-private:
+public:
 
 	string config_file_name;
 	string vtp_list_file_name;
