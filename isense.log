@@ -1,0 +1,154 @@
+InterSense Library ver. 4.04 64-bit
+Copyright 1998-2007 InterSense Inc.
+http://www.intersense.com
+Tel: 781-541-6330
+
+Looking for InterSense tracking device number 1. 
+Please wait 
+Looking for IS-X00 device on port 1 (0.04)
+Opened /dev/ttyS0
+..Invalid Baud Rate (57600) on port 1
+.Looking for InterTrax on port 1 (RTS Reset) (0.28)
+InterTrax: Failed to reset
+Looking for IS-X00 device on port 2 (0.88)
+Opened /dev/ttyS1
+Error Configuring Port 2
+.Error Configuring Port 2
+.Error Configuring Port 2
+.Error Configuring Port 2
+Looking for InterTrax on port 2 (RTS Reset) (0.88)
+Error Configuring Port 2
+InterTrax: serutilSetSpeed error
+InterTrax: Failed to reset
+Looking for IS-X00 device on port 3 (0.88)
+Opened /dev/ttyS2
+Error Configuring Port 3
+.Error Configuring Port 3
+.Error Configuring Port 3
+.Error Configuring Port 3
+Looking for InterTrax on port 3 (RTS Reset) (0.88)
+Error Configuring Port 3
+InterTrax: serutilSetSpeed error
+InterTrax: Failed to reset
+Looking for IS-X00 device on port 4 (0.88)
+Opened /dev/ttyS3
+Error Configuring Port 4
+.Error Configuring Port 4
+.Error Configuring Port 4
+.Error Configuring Port 4
+Looking for InterTrax on port 4 (RTS Reset) (0.88)
+Error Configuring Port 4
+InterTrax: serutilSetSpeed error
+InterTrax: Failed to reset
+Looking for IS-X00 device on port 5 (0.88)
+Failed to open /dev/ttyS4
+Looking for IS-X00 device on port 6 (0.88)
+Failed to open /dev/ttyS5
+Looking for IS-X00 device on port 7 (0.88)
+Failed to open /dev/ttyS6
+Looking for IS-X00 device on port 8 (0.88)
+Failed to open /dev/ttyS7
+Looking for IS-X00 device on port 9 (0.88)
+Failed to open /dev/ttyS8
+Looking for IS-X00 device on port 10 (0.88)
+Failed to open /dev/ttyS9
+Looking for IS-X00 device on port 11 (0.88)
+Failed to open /dev/ttyS10
+Looking for IS-X00 device on port 12 (0.88)
+Failed to open /dev/ttyS11
+Looking for IS-X00 device on port 13 (0.88)
+Failed to open /dev/ttyS12
+Looking for IS-X00 device on port 14 (0.88)
+Failed to open /dev/ttyS13
+Looking for IS-X00 device on port 15 (0.88)
+Failed to open /dev/ttyS14
+Looking for IS-X00 device on port 16 (0.88)
+Failed to open /dev/ttyS15
+Looking for IS-X00 device on port 17 (0.88)
+Failed to open /dev/ttyS16
+Looking for IS-X00 device on port 18 (0.88)
+Failed to open /dev/ttyS17
+Looking for IS-X00 device on port 19 (0.88)
+Failed to open /dev/ttyS18
+Looking for IS-X00 device on port 20 (0.88)
+Failed to open /dev/ttyS19
+Looking for IS-X00 device on port 21 (0.88)
+Failed to open /dev/ttyS20
+Looking for IS-X00 device on port 22 (0.88)
+Failed to open /dev/ttyS21
+Looking for IS-X00 device on port 23 (0.88)
+Failed to open /dev/ttyS22
+Looking for IS-X00 device on port 24 (0.88)
+Failed to open /dev/ttyS23
+Looking for IS-X00 device on port 25 (0.88)
+Failed to open /dev/ttyS24
+Looking for IS-X00 device on port 26 (0.88)
+Failed to open /dev/ttyS25
+Looking for IS-X00 device on port 27 (0.88)
+Failed to open /dev/ttyS26
+Looking for IS-X00 device on port 28 (0.88)
+Failed to open /dev/ttyS27
+Looking for IS-X00 device on port 29 (0.88)
+Failed to open /dev/ttyS28
+Looking for IS-X00 device on port 30 (0.88)
+Failed to open /dev/ttyS29
+Looking for IS-X00 device on port 31 (0.88)
+Failed to open /dev/ttyS30
+Looking for IS-X00 device on port 32 (0.88)
+Failed to open /dev/ttyS31
+
+Looking for SDP devices (0.88)
+DEVWRN: Device config file not found: isradio.ini
+Opened /dev/ttyS0
+Opened /dev/ttyS1
+Error Configuring Port 2
+Error Getting RTS State on Port 2
+Error asserting trigger for COM2 (Error Getting RTS State on Port 2
+)
+Opened /dev/ttyS2
+Error Configuring Port 3
+Error Getting RTS State on Port 3
+Error asserting trigger for COM3 (Error Getting RTS State on Port 3
+)
+Opened /dev/ttyS3
+Error Configuring Port 4
+Error Getting RTS State on Port 4
+Error asserting trigger for COM4 (Error Getting RTS State on Port 4
+)
+Failed to open /dev/ttyS4
+Failed to open /dev/ttyS5
+Failed to open /dev/ttyS6
+Failed to open /dev/ttyS7
+Failed to open /dev/ttyS8
+Failed to open /dev/ttyS9
+Failed to open /dev/ttyS10
+Failed to open /dev/ttyS11
+Failed to open /dev/ttyS12
+Failed to open /dev/ttyS13
+Failed to open /dev/ttyS14
+Failed to open /dev/ttyS15
+Failed to open /dev/ttyS16
+Failed to open /dev/ttyS17
+Failed to open /dev/ttyS18
+Failed to open /dev/ttyS19
+Failed to open /dev/ttyS20
+Failed to open /dev/ttyS21
+Failed to open /dev/ttyS22
+Failed to open /dev/ttyS23
+Failed to open /dev/ttyS24
+Failed to open /dev/ttyS25
+Failed to open /dev/ttyS26
+Failed to open /dev/ttyS27
+Failed to open /dev/ttyS28
+Failed to open /dev/ttyS29
+Failed to open /dev/ttyS30
+Failed to open /dev/ttyS31
+Opened /dev/ttyS0
+DEVWRN: SDP initialization failed
+
+No SDP Deviced found (2.53)
+
+Looking for UDP Broadcasts
+
+
+IS-900 Series device detected on port 5001
